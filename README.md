@@ -1,5 +1,7 @@
 # WaveView_flutter
 a self waveView of flutter
+
+[xxxx](https://github.com/While1true/WaveView_flutter/blob/master/wavepng.png)
 ---![2017-08-19-12-02-52.gif](http://upload-images.jianshu.io/upload_images/6456519-f48b62df0147c5da.gif?imageMogr2/auto-orient/strip)
 
 > 原理：正弦曲线y=a*sin(b*α+c)+m;
@@ -9,6 +11,14 @@ a self waveView of flutter
 > 思路：画出波的path，通过动画控制振幅a达到水波的起伏效果<br>控制c的值达到移动效果
 ---
 ```
+WaveWidget(
+            imageProvider:NetworkImage(userInfo.user_url),
+            size: Size(MediaQuery.of(context).size.width, 250.0),
+            bgColor: ColorValues.primaryColor,
+          )
+
+
+
 WaveWidget(
       {this.imageProvider,
       @required this.size,
