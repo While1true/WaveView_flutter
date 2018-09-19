@@ -1,8 +1,8 @@
 # WaveView_flutter
 a self waveView of flutter
 
-[xxxx](https://github.com/While1true/WaveView_flutter/blob/master/wavepng.png)
----![2017-08-19-12-02-52.gif](http://upload-images.jianshu.io/upload_images/6456519-f48b62df0147c5da.gif?imageMogr2/auto-orient/strip)
+![xxxx](https://github.com/While1true/WaveView_flutter/blob/master/wavepng.png)
+![2017-08-19-12-02-52.gif](http://upload-images.jianshu.io/upload_images/6456519-f48b62df0147c5da.gif?imageMogr2/auto-orient/strip)
 
 > 原理：正弦曲线y=a*sin(b*α+c)+m;
 
