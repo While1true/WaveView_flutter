@@ -7,7 +7,7 @@
       @required this.size,
       this.imgSize = const Size(60.0, 60.0),
       this.imgOffset = const Offset(0.0, 0.0),
-      this.waveAmplifier = 10.0,
+      this.waveAmplitude = 10.0,
       this.waveFrequency = 1.6,
       this.wavePhase = 10.0,
       this.bgColor,
@@ -39,9 +39,9 @@
 - 计算x->屏幕宽度取值下的y的值，将这些点加入到一个path，就绘制出了波浪线,多个波纹，用同样的方法
 -
 ```
-    path1.moveTo(0.0,viewCenterY -waveAmplifier * _getSinY(wavePhaseValue.value, waveFrequency, -1));
+    path1.moveTo(0.0,viewCenterY -waveAmplitude * _getSinY(wavePhaseValue.value, waveFrequency, -1));
     for (int i = 0; i < size.width - 1; i++) {
-      path1.lineTo((i + 1).toDouble(), viewCenterY -waveAmplifier * _getSinY(wavePhaseValue.value, waveFrequency, (i + 1)));
+      path1.lineTo((i + 1).toDouble(), viewCenterY -waveAmplitude * _getSinY(wavePhaseValue.value, waveFrequency, (i + 1)));
     }
     path1.lineTo(size.width, size.height);
     path1.lineTo(0.0, size.height);
