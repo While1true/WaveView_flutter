@@ -26,7 +26,7 @@ class WaveWidget extends StatefulWidget {
   /**
    * 振幅
    */
-  double waveAmplifier;
+  double waveAmplitude;
 
   /**
    * 角度偏移
@@ -52,7 +52,7 @@ class WaveWidget extends StatefulWidget {
       @required this.size,
       this.imgSize = const Size(60.0, 60.0),
       this.imgOffset = const Offset(0.0, 0.0),
-      this.waveAmplifier = 10.0,
+      this.waveAmplitude = 10.0,
       this.waveFrequency = 1.6,
       this.wavePhase = 10.0,
       this.bgColor,
@@ -69,10 +69,12 @@ class _WaveWidgetState extends State<WaveWidget> with TickerProviderStateMixin {
   Image image;
   bool _isListeningToStream = false;
   ImageStream _imageStream;
+  Size imgSize;
 
   @override
   void initState() {
     super.initState();
+    imgSize = widget.imgSize;
     _waveControl =
         new AnimationController(vsync: this, duration: Duration(seconds: 2));
     _wavePhaseValue =
@@ -119,14 +121,14 @@ class _WaveWidgetState extends State<WaveWidget> with TickerProviderStateMixin {
       painter: _MyWavePaint(
           image: image,
           bgColor: widget.bgColor,
-          imageSize: widget.imgSize,
+          imageSize: imgSize,
           heightPercentange: widget.heightPercentange,
           repaint: _waveControl,
           imgOffset: widget.imgOffset,
           rountImg: widget.rountImg,
           waveFrequency: widget.waveFrequency,
           wavePhaseValue: _wavePhaseValue,
-          waveAmplifier: widget.waveAmplifier),
+          waveAmplitude: widget.waveAmplitude),
       size: widget.size,
     );
   }
@@ -157,6 +159,7 @@ class _WaveWidgetState extends State<WaveWidget> with TickerProviderStateMixin {
     assert(_imageStream != null);
     _stopListeningToStream();
     _waveControl.dispose();
+    widget.imageProvider.evict();
     super.dispose();
   }
 
@@ -173,10 +176,34 @@ class _WaveWidgetState extends State<WaveWidget> with TickerProviderStateMixin {
   }
 
   void _handleImageChanged(ImageInfo imageInfo, bool synchronousCall) {
+    if (imageInfo == null) {
+      return;
+    }
+    _caculatePercentangeSize(imageInfo);
     setState(() {
       image = imageInfo.image;
       _waveControl.forward();
     });
+  }
+
+  /**
+   * 按等宽或等高计算宽高，当给定的宽高为0
+   * 都为0时为图片原尺寸
+   */
+  void _caculatePercentangeSize(ImageInfo imageInfo) {
+    if (imgSize.width == 0.0 && imgSize.height == 0.0) {
+      imgSize = Size(
+          imageInfo.image.width.toDouble(), imageInfo.image.height.toDouble());
+    } else if (imgSize.isEmpty) {
+      if (imgSize.width == 0.0) {
+        imgSize = Size(
+            imageInfo.image.width * imgSize.height / imageInfo.image.height,
+            imgSize.height);
+      } else {
+        imgSize = Size(imgSize.width,
+            imageInfo.image.height * imgSize.width / imageInfo.image.width);
+      }
+    }
   }
 }
 
@@ -190,14 +217,14 @@ class _MyWavePaint extends CustomPainter {
       this.waveFrequency,
       this.wavePhaseValue,
       this.rountImg = true,
-      this.waveAmplifier,
+      this.waveAmplitude,
       Listenable repaint})
       : super(repaint: repaint);
 
   /**
    * 振幅
    */
-  double waveAmplifier;
+  double waveAmplitude;
 
   /**
    * 角度
@@ -229,15 +256,20 @@ class _MyWavePaint extends CustomPainter {
   double _tempb = 0.0;
   double viewWidth = 0.0;
   Paint mPaint = Paint();
+  Rect rect;
 
   @override
   void paint(Canvas canvas, Size size) {
-    waveAmplifier =
-        (waveAmplifier * 2 > size.height) ? (size.height / 2) : waveAmplifier;
+    waveAmplitude =
+        (waveAmplitude * 2 > size.width) ? (size.height / 2) : waveAmplitude;
     var viewCenterY = size.height * heightPercentange;
     viewWidth = size.width;
     if (bgColor != null) {
-      canvas.drawColor(bgColor, BlendMode.src);
+      mPaint.color = bgColor;
+      if (rect == null) {
+        rect = Rect.fromLTRB(0.0, 0.0, size.width, size.height);
+      }
+      canvas.drawRect(rect, mPaint);
     }
     _fillPath(viewCenterY, size);
 
@@ -260,35 +292,35 @@ class _MyWavePaint extends CustomPainter {
     path1.moveTo(
         0.0,
         viewCenterY -
-            waveAmplifier * _getSinY(wavePhaseValue.value, waveFrequency, -1));
+            waveAmplitude * _getSinY(wavePhaseValue.value, waveFrequency, -1));
     path2.moveTo(
         0.0,
         viewCenterY -
             1.3 *
-                waveAmplifier *
+                waveAmplitude *
                 _getSinY(wavePhaseValue.value + 90, waveFrequency, -1));
     path3.moveTo(
         0.0,
         viewCenterY +
-            waveAmplifier * _getSinY(wavePhaseValue.value, waveFrequency, -1));
+            waveAmplitude * _getSinY(wavePhaseValue.value, waveFrequency, -1));
 
     for (int i = 0; i < size.width - 1; i++) {
       path1.lineTo(
           (i + 1).toDouble(),
           viewCenterY -
-              waveAmplifier *
+              waveAmplitude *
                   _getSinY(wavePhaseValue.value, waveFrequency, (i + 1)));
       path2.lineTo(
           (i + 1).toDouble(),
           viewCenterY -
               1.3 *
-                  waveAmplifier *
+                  waveAmplitude *
                   _getSinY(
                       wavePhaseValue.value + 90, 0.8 * waveFrequency, (i + 1)));
       path3.lineTo(
           (i + 1).toDouble(),
           viewCenterY +
-              waveAmplifier *
+              waveAmplitude *
                   _getSinY(wavePhaseValue.value, waveFrequency, -1));
     }
     path1.lineTo(size.width, size.height);
@@ -311,7 +343,7 @@ class _MyWavePaint extends CustomPainter {
           viewWidth / 2 - imageSize.width / 2,
           viewCenterY -
               1.3 *
-                  waveAmplifier *
+                  waveAmplitude *
                   _getSinY(wavePhaseValue.value + 90, waveFrequency * 0.8,
                       (viewWidth / 2 + 1).toInt()) -
               imageSize.height);
@@ -321,8 +353,22 @@ class _MyWavePaint extends CustomPainter {
           offset.dx + imgOffset.dx + imageSize.width,
           offset.dy + imageSize.height + imgOffset.dy);
       if (rountImg) {
+        var clipOvalRect=destRect;
         canvas.save();
-        canvas.clipPath(Path()..addOval(destRect));
+        /**
+         * 计算圆形裁剪区域
+         */
+        if (destRect.width != destRect.height) {
+          var djust = (destRect.width - destRect.height).abs() / 2;
+          if (destRect.width > destRect.height) {
+            clipOvalRect = Rect.fromLTRB(destRect.left + djust, destRect.top,
+                destRect.right - djust, destRect.bottom);
+          } else {
+            clipOvalRect = Rect.fromLTRB(destRect.left, destRect.top + djust,
+                destRect.right, destRect.bottom - djust);
+          }
+        }
+        canvas.clipPath(Path()..addOval(clipOvalRect));
       }
       canvas.drawImageRect(
           image,
