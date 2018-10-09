@@ -267,7 +267,7 @@ class _MyWavePaint extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     waveAmplitude =
-        (waveAmplitude * 2 > size.width) ? (size.height / 2) : waveAmplitude;
+        (waveAmplitude * 2 > size.height) ? (size.height / 2) : waveAmplitude;
     var viewCenterY = size.height * heightPercentange;
     viewWidth = size.width;
     if (bgColor != null) {
