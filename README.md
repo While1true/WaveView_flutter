@@ -1,6 +1,9 @@
 ### flutter自定义波浪view
 
 ![waveview.gif](https://github.com/While1true/WaveView_flutter/blob/master/waveview.gif)
+
+![waveview.gif](https://github.com/While1true/WaveView_flutter/blob/master/waveview2.gif)
+
 ```
 void main() => runApp(WaveWidget(
       bgColor: Colors.lightBlue,
