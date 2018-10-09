@@ -43,7 +43,10 @@ class WaveWidget extends StatefulWidget {
    */
   double heightPercentange;
 
-  bool rountImg;
+  /**
+   * 图像圆形裁剪
+   */
+  bool roundImg;
   ImageProvider<dynamic> imageProvider;
   Color bgColor;
 
@@ -56,7 +59,7 @@ class WaveWidget extends StatefulWidget {
       this.waveFrequency = 1.6,
       this.wavePhase = 10.0,
       this.bgColor,
-      this.rountImg = true,
+      this.roundImg = true,
       this.heightPercentange = 6 / 7});
 
   @override
@@ -125,7 +128,7 @@ class _WaveWidgetState extends State<WaveWidget> with TickerProviderStateMixin {
           heightPercentange: widget.heightPercentange,
           repaint: _waveControl,
           imgOffset: widget.imgOffset,
-          rountImg: widget.rountImg,
+          roundImg: widget.roundImg,
           waveFrequency: widget.waveFrequency,
           wavePhaseValue: _wavePhaseValue,
           waveAmplitude: widget.waveAmplitude),
@@ -216,7 +219,7 @@ class _MyWavePaint extends CustomPainter {
       this.heightPercentange,
       this.waveFrequency,
       this.wavePhaseValue,
-      this.rountImg = true,
+      this.roundImg = true,
       this.waveAmplitude,
       Listenable repaint})
       : super(repaint: repaint);
@@ -245,7 +248,7 @@ class _MyWavePaint extends CustomPainter {
    * 图标偏移
    */
   Offset imgOffset;
-  bool rountImg;
+  bool roundImg;
   Image image;
   Color bgColor;
   Size imageSize;
@@ -352,7 +355,7 @@ class _MyWavePaint extends CustomPainter {
           offset.dy + imgOffset.dy,
           offset.dx + imgOffset.dx + imageSize.width,
           offset.dy + imageSize.height + imgOffset.dy);
-      if (rountImg) {
+      if (roundImg) {
         var clipOvalRect=destRect;
         canvas.save();
         /**
@@ -376,7 +379,7 @@ class _MyWavePaint extends CustomPainter {
               0.0, 0.0, image.width.toDouble(), image.height.toDouble()),
           destRect,
           mPaint);
-      if (rountImg) {
+      if (roundImg) {
         canvas.restore();
       }
     }
