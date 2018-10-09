@@ -96,12 +96,13 @@ class _WaveWidgetState extends State<WaveWidget> with TickerProviderStateMixin {
 
   @override
   void didChangeDependencies() {
-    _resolveImage();
-
-    if (TickerMode.of(context))
-      _listenToStream();
-    else
-      _stopListeningToStream();
+    if (widget.imageProvider != null) {
+      _resolveImage();
+      if (TickerMode.of(context))
+        _listenToStream();
+      else
+        _stopListeningToStream();
+    }
 
     super.didChangeDependencies();
   }
@@ -114,7 +115,8 @@ class _WaveWidgetState extends State<WaveWidget> with TickerProviderStateMixin {
 
   @override
   void reassemble() {
-    _resolveImage(); // in case the image cache was flushed
+    if (widget.imageProvider != null)
+      _resolveImage(); // in case the image cache was flushed
     super.reassemble();
   }
 
@@ -159,10 +161,11 @@ class _WaveWidgetState extends State<WaveWidget> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    assert(_imageStream != null);
-    _stopListeningToStream();
+    if (widget.imageProvider != null) {
+      _stopListeningToStream();
+      widget.imageProvider.evict();
+    }
     _waveControl.dispose();
-    widget.imageProvider.evict();
     super.dispose();
   }
 
@@ -356,7 +359,7 @@ class _MyWavePaint extends CustomPainter {
           offset.dx + imgOffset.dx + imageSize.width,
           offset.dy + imageSize.height + imgOffset.dy);
       if (roundImg) {
-        var clipOvalRect=destRect;
+        var clipOvalRect = destRect;
         canvas.save();
         /**
          * 计算圆形裁剪区域
