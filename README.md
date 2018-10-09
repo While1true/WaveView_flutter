@@ -1,8 +1,7 @@
 ### flutter自定义波浪view
 
-![waveview.gif](https://github.com/While1true/WaveView_flutter/blob/master/waveview.gif)
+![waveview.gif](https://github.com/While1true/WaveView_flutter/blob/master/waveview.gif) 
 
-![waveview.gif](https://github.com/While1true/WaveView_flutter/blob/master/waveview2.gif)
 
 ```
 void main() => runApp(WaveWidget(
@@ -26,7 +25,7 @@ void main() => runApp(WaveWidget(
       this.rountImg = true,
       this.heightPercentange = 6 / 7});
 ```
-
+![waveview.gif](https://github.com/While1true/WaveView_flutter/blob/master/waveview2.gif)
 1.自定义view动画的步骤
 > 原生自定义view是继承view，重写onMeasure和Ondraw方法，在ondraw中在canvas中画出图形，再通过Animator控制变量值，来达到动画效果
 
