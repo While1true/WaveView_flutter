@@ -2,6 +2,15 @@
 
 ![waveview.gif](https://github.com/While1true/WaveView_flutter/blob/master/waveview.gif)
 ```
+void main() => runApp(WaveWidget(
+      bgColor: Colors.lightBlue,
+//       imageProvider: AssetImage('assets/pic/ic_headimg.png'),
+//       imgSize: Size(50.0, 0.0),
+      size: Size(300.0, 500.0),
+    ));
+
+
+
  WaveWidget(
       {this.imageProvider,
       @required this.size,
